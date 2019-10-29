@@ -1,6 +1,7 @@
 package io.microsamples.latency.client;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
@@ -25,24 +26,28 @@ public class ClientApplication {
 @RestController
 class RemoteChachkiesGetter {
 
-	private RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
-	RemoteChachkiesGetter(RestTemplate restTemplate) {
-		this.restTemplate = restTemplate;
-	}
+    @Value("${service.url:http://localhost:8081/chachkies}")
+    private String serviceUrl;
 
-	@GetMapping("/remote-chachkies")
-	private ResponseEntity<List<Chachkie>> remoteChachkies(){
-		final ResponseEntity<Chachkie[]> forEntity = restTemplate.getForEntity("http://localhost:8081/chachkies"
-				, Chachkie[].class);
-		final List<Chachkie> chachkies = Arrays.asList(forEntity.getBody());
-		return ResponseEntity.ok(chachkies);
+    RemoteChachkiesGetter(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
-	}
+    @GetMapping("/remote-chachkies")
+    private ResponseEntity<List<Chachkie>> remoteChachkies() {
+        final ResponseEntity<Chachkie[]> forEntity = restTemplate.getForEntity(serviceUrl
+                , Chachkie[].class);
+        final List<Chachkie> chachkies = Arrays.asList(forEntity.getBody());
+        return ResponseEntity.ok(chachkies);
+
+    }
 }
+
 @Data
 class Chachkie {
-	private UUID id;
-	private String name, description;
-	private Instant when;
+    private UUID id;
+    private String name, description;
+    private Instant when;
 }

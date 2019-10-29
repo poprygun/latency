@@ -49,12 +49,12 @@
                 <version>${gatling-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>getUsers</id>
+                        <id>getChachkies</id>
                         <goals>
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <simulationClass>com.developers.perspective.simulation.UserMicroserviceSimulation</simulationClass>
+                            <simulationClass>io.microsamples.testz.simulation.GetRootsSimulation</simulationClass>
                         </configuration>
                     </execution>
                 </executions>

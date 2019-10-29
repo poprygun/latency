@@ -1,0 +1,5 @@
+---
+applications:
+  - name: rest-api-client
+    memory: 1G
+    path: target/client.jar
