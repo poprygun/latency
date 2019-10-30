@@ -2,18 +2,6 @@
 
 Demonstrates a simple load test that can be used to stress test REST API.
 
-## Prerequisites
-
-1. Start Algebra Service application `io.microsamples.testz.app.AppApplication`
-
-## Run load tests
-
-1. Adjust `io.microsamples.testz.util.Environment` to point to service base url.
-2. Adjust `io.microsamples.testz.scenarios.GetRoots` for complete url.
-3. From `load\` directory run
-```bash
-mvn gatling:test
-
-```
-
+1. Point `io.microsamples.testz.util.Environment` to a host API to be tested.
+2. Point `io.microsamples.testz.scenarios.GetRoots` to path to be tested
 Test results are available in `target/gatling/../index.html`

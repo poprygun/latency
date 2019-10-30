@@ -1,0 +1,5 @@
+---
+applications:
+  - name: trace-server
+    memory: 1G
+    path: target/zipkin-server.jar
