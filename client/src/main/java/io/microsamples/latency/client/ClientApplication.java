@@ -5,15 +5,14 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @SpringBootApplication
@@ -31,6 +30,7 @@ class RemoteChachkiesGetter {
     private RestTemplate restTemplate;
     private MeterRegistry registry;
     private AtomicLong chachkiesCount;
+    private static final String CHACHKIES_COUNT_GAUGE = "chachkiesServed";
 
     @Value("${service.url:http://localhost:8081/chachkies}")
     private String serviceUrl;
@@ -54,8 +54,15 @@ class RemoteChachkiesGetter {
 
     }
 
+    @GetMapping("/reset-chachkies")
+    private HttpStatus resetChachkies(){
+        final AtomicLong gauge = registry.gauge(CHACHKIES_COUNT_GAUGE, this.chachkiesCount);
+        gauge.set(0L);
+        return HttpStatus.OK;
+    }
+
     private void trackChachkies(List<Chachkie> chachkies) {
-        final AtomicLong chachkiesGauge = registry.gauge("chachkiesServed", this.chachkiesCount);
+        final AtomicLong chachkiesGauge = registry.gauge(CHACHKIES_COUNT_GAUGE, this.chachkiesCount);
         chachkiesGauge.addAndGet(chachkies.size());
     }
 }
