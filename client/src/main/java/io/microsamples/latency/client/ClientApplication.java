@@ -2,6 +2,9 @@ package io.microsamples.latency.client;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.Data;
+import lombok.ToString;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,6 +28,7 @@ public class ClientApplication {
 }
 
 @RestController
+@Slf4j
 class RemoteChachkiesGetter {
 
     private RestTemplate restTemplate;
@@ -46,6 +50,7 @@ class RemoteChachkiesGetter {
     private ResponseEntity<List<Chachkie>> remoteChachkies() {
         final ResponseEntity<Chachkie[]> forEntity = restTemplate.getForEntity(serviceUrl
                 , Chachkie[].class);
+
         final List<Chachkie> chachkies = Arrays.asList(forEntity.getBody());
 
         trackChachkies(chachkies);
@@ -55,19 +60,21 @@ class RemoteChachkiesGetter {
     }
 
     @GetMapping("/reset-chachkies")
-    private HttpStatus resetChachkies(){
+    private HttpStatus resetChachkies() {
         final AtomicLong gauge = registry.gauge(CHACHKIES_COUNT_GAUGE, this.chachkiesCount);
         gauge.set(0L);
         return HttpStatus.OK;
     }
 
     private void trackChachkies(List<Chachkie> chachkies) {
+        chachkies.stream().forEach(c -> log.info(c.toString()));
         final AtomicLong chachkiesGauge = registry.gauge(CHACHKIES_COUNT_GAUGE, this.chachkiesCount);
         chachkiesGauge.addAndGet(chachkies.size());
     }
 }
 
 @Data
+@ToString
 class Chachkie {
     private UUID id;
     private String name, description;
