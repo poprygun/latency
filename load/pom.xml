@@ -8,9 +8,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<!--        <gatling.version>2.3.1</gatling.version>-->
         <gatling.version>3.2.1</gatling.version>
-<!--        <gatling-plugin.version>2.2.4</gatling-plugin.version>-->
         <gatling-plugin.version>3.0.3</gatling-plugin.version>
         <scala-maven-plugin.version>4.2.4</scala-maven-plugin.version>
     </properties>
@@ -34,14 +32,52 @@
             <version>${gatling.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.12.3</version>
+        </dependency>
     </dependencies>
 
     <build>
+        <finalName>loader</finalName>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
         <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/test-jar-with-dependencies.xml</descriptor>
+                    </descriptors>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
                 <version>${scala-maven-plugin.version}</version>
+                <configuration>
+                    <sourceDir>${basedir}/src</sourceDir>
+                    <outputDir>${basedir}/target/classes</outputDir>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>io.gatling</groupId>
@@ -50,9 +86,9 @@
                 <executions>
                     <execution>
                         <id>getChachkies</id>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
+<!--                        <goals>-->
+<!--                            <goal>execute</goal>-->
+<!--                        </goals>-->
                         <configuration>
                             <simulationClass>io.microsamples.testz.simulation.GetRootsSimulation</simulationClass>
                         </configuration>

@@ -14,9 +14,9 @@ class GetRootsSimulation extends Simulation {
   val quadraticEquasionMicroserviceScenarios = List(
 
     GetRoots.getRoots.inject(
-      rampUsersPerSec(1) to 100 during (10 seconds) // 6
-      , constantUsersPerSec(100) during (30 seconds)
-      , constantUsersPerSec(50) during (20 seconds)
+//      rampUsersPerSec(1) to 100 during (10 seconds) // 6
+       constantUsersPerSec(10) during (10 seconds)
+//      , constantUsersPerSec(50) during (20 seconds)
     )
   )
 
