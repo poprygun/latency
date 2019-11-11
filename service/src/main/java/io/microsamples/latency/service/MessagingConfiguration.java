@@ -10,7 +10,7 @@ import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 
 @Configuration
-@EnableBinding(Sink.class)
+@EnableBinding({Sink.class})
 @Profile("messaging")
 public class MessagingConfiguration {
 }

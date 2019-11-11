@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    stream:
+      default-binder: kafka
+      kafka:
+        binder:
+          auto-create-topics: false
+      bindings:
+        custom-metrics:
+          destination: custom-metrics-destination
+          group: custom-metrics-group
